@@ -140,6 +140,7 @@ export default {
       return response.data;
     };
 
+
     const getCourses = async () => {
       const response = await axiosInstance.get("/courses");
       return response.data;
@@ -162,6 +163,8 @@ export default {
           examination.value.createdAt
         ).toLocaleString();
       });
+
+      
 
       getCourses().then((data) => {
         courses.value = data.data;

@@ -17,4 +17,18 @@ const axiosInstance = axios.create({
     withCredentials: true
 });
 
+axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+        const urlParms = {
+            redirect_uri: window.location.href,
+            message: "You are not logged in. Please login to continue"
+        }
+        if (error.response.status === 401) {
+            window.location.href = '/#/login?' + new URLSearchParams(urlParms)
+        }
+        return Promise.reject(error)
+    }
+)
+
 export default axiosInstance

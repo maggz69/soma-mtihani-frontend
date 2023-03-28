@@ -24,7 +24,9 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import axiosInstance from "@/api/axiosInstance";
 export default {
   name: "ExaminationStats",
   setup() {
@@ -32,7 +34,24 @@ export default {
     const questionsCompleted = ref(0);
     const numberOfViews = ref(0);
 
-    
+    const route = useRoute();
+
+    const getExaminationStatistics = async () => {
+      // get the :id param from the route
+      const examId = route.params.id;
+      const response = await axiosInstance.get(
+        `/examinations/${examId}/statistics`
+      );
+      return response.data;
+    };
+
+    onMounted(() => {
+      getExaminationStatistics().then((data) => {
+        questionsLoaded.value = data.questionsLoaded;
+        questionsCompleted.value = data.questionsCompleted;
+        numberOfViews.value = data.examinationViews;
+      });
+    });
 
     return {
       questionsLoaded,

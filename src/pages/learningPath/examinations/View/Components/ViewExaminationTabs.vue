@@ -70,7 +70,7 @@ const tabs = [
 ];
 
 import learningPathRoutes from "@/routes/learningPath.js";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
@@ -78,6 +78,18 @@ export default {
   setup() {
     const route = useRoute();
     const tabs = reactive([]);
+
+    // watch if the route changes and update the tabs
+    watch(route, () => {
+      tabs.forEach((tab) => {
+        tab.current = false;
+      });
+
+      const currentTab = tabs.find((tab) => tab.routeName === route.name);
+      if (currentTab) {
+        currentTab.current = true;
+      }
+    });
 
     const buildRoutesForVueExamination = () => {
       const nestedRoutes = function (route) {

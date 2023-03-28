@@ -189,18 +189,13 @@
 
 <script>
 import { XCircleIcon } from "@heroicons/vue/20/solid";
-import { reactive, ref, inject } from "vue";
+import { reactive, ref, inject,onMounted } from "vue";
 import axiosInstance from "@/api/axiosInstance";
+import { useRoute } from "vue-router";
 
 export default {
   name: "CreateQuestionForExamination",
-  props: {
-    examinationId: {
-      id: String,
-      required: false,
-    },
-  },
-  setup(props) {
+  setup() {
     const question = reactive({
       order: 1,
       sequence: 1,
@@ -254,6 +249,22 @@ export default {
           console.log(error);
         });
     };
+
+    const getExaminationIdFromRoute = () => {
+      const route = useRoute();
+      const examinationId = route.params.id;
+
+      console.log(examinationId);
+
+      return examinationId;
+    };
+
+    onMounted(() => {
+      const examinationId = getExaminationIdFromRoute();
+      question.examinationId = examinationId;
+      
+    });
+
     return {
       question,
       questionImages,
